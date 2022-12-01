@@ -1,0 +1,28 @@
+ Facts:
+ 1.In the Functional Components, when the state updates, the component will re-render and the entire component will be called. 
+ 2.In the class Components, when the state updates, the component will re-render and only the render method will be called. 
+ 3.In React class component,state can only be an object.
+ 
+ 4.Example:-Which of the following React Hooks code snippets is equivalent to the given Class component code snippet? 
+ 
+qquestion---> 
+
+state = {
+    bulbStatus: false
+}
+  
+onClickSwitchOn = () => {
+    this.setState({bulbStatus: true})
+}
+ 
+ 
+ Answer---->
+ 
+ const [bulbStatus, setBulbStatus] = useState(false)
+
+const onClickSwitchOn = () => {
+    setBulbStatus(true)
+}
+ 
+5. React will preserve the state variable between the re-renders in the unctional component.
+6.Use state hook returns an array.
