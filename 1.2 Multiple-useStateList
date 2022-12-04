@@ -1,0 +1,124 @@
+1. Declaring Multiple state variables
+
+We can declare multiple state variables by calling useState multiple times. 
+
+const [var1, setVar1] = useState(initialValue);
+const [var2, setVar2] = useState(initialValue);
+const [var3, setVar3] = useState(initialValue); 
+
+2. Initializing State
+
+Syntax:
+const [currentState, setterFun] = useState(initialValue); 
+
+
+The initial value provided to the useState() can be of any data type
+2.1 Providing Object as an initial value
+
+As a best practice, we can provide Object as an initial value when we want to store values that tend to change together
+
+Example:
+const [comment, setComment] = useState({ name: "", commentText: "" }); 
+
+2.2 Providing Array as an initial value
+
+We can provide the array as an initial value to useState()
+
+const [commentsList, setCommentsList] = useState([]); 
+
+3. Updating State
+
+We can update the state using setter function by passing value/callback function as an argument 
+
+const [currentState, setterFun] = useState(initialValue); 
+
+
+3.1 Updating State using Callback function
+
+Update the state using callback function if the next state is computed based on the previous state.
+
+setterFun((prevState) => nextState);
+
+
+File: src/components/Comments/index.js
+
+import { useState } from "react";
+
+import CommentItem from "../CommentItem";
+
+import {
+  CommentsContainer,
+  CommentsTitle,
+  Form,
+  NameInput,
+  CommentTextInput,
+  CommentButton,
+  CommentsList,
+} from "./styledComponents";
+
+const Comments = () => {
+  const [name, setName] = useState("");
+  const [commentText, setCommentText] = useState("");
+  const [commentsList, setCommentsList] = useState([]);
+
+  const onChangeName = (event) => setName(event.target.value);
+
+  const onChangeCommentText = (event) => setCommentText(event.target.value);
+
+  const onAddComment = (event) => {
+    event.preventDefault();
+    const newComment = {
+      id: uuidv4(),
+      name,
+      commentText,
+    };
+    setCommentsList((prevCommentsList) => [...prevCommentsList, newComment]);
+    setName("");
+    setCommentText("");
+  };
+
+  return (
+    <CommentsContainer>
+      <CommentsTitle>Comments</CommentsTitle>
+      <Form onSubmit={onAddComment}>
+        <NameInput
+          type="text"
+          placeholder="Your name"
+          value={name}
+          onChange={onChangeName}
+        />
+        <CommentTextInput
+          placeholder="Your comment"
+          value={commentText}
+          onChange={onChangeCommentText}
+          rows="6"
+        />
+        <CommentButton type="submit">Comment</CommentButton>
+      </Form>
+      <CommentsList>
+        {commentsList.map((eachComment) => (
+          <CommentItem key={eachComment.id} commentDetails={eachComment} />
+        ))}
+      </CommentsList>
+    </CommentsContainer>
+  );
+};
+
+export default Comments;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
