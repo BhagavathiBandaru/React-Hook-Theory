@@ -1,0 +1,139 @@
+1. Persisting data while using React Hooks
+1.1 Storing values in Local Storage
+
+In useEffect
+ we have access to the updated state values, so we write the logic for storing values inside it.
+
+File: src/components/BmiCalculator/index.js
+
+const BmiCalculator = () => {
+  const [height, setHeight] = useState(170)
+  const [weight, setWeight] = useState(60)
+
+  useEffect(() => {
+    document.title = `Your BMI: ${getBmi(weight, height)}`
+    localStorage.setItem("height", JSON.stringify(height))
+    localStorage.setItem("weight", JSON.stringify(weight))
+  })
+  ...
+  return (...)
+}
+
+export default BmiCalculator
+
+
+
+
+1.2 Getting values from the Local Storage
+
+Once after getting the values from the Local Storage, provide them as the initial values for the useState
+ hook
+
+File: src/components/BmiCalculator/index.js 
+
+..
+const BmiCalculator = () => {
+  const storedHeight = JSON.parse(localStorage.getItem("height"))
+  const storedWeight = JSON.parse(localStorage.getItem("weight"))
+
+  const [height, setHeight] = useState(storedHeight !== null ? storedHeight : 170)
+  const [weight, setWeight] = useState(storedWeight !== null ? storedWeight : 60)
+
+  useEffect(() => {
+    ...
+    localStorage.setItem("height", JSON.stringify(height))
+    localStorage.setItem("weight", JSON.stringify(weight))
+  })
+  ...
+}
+
+export default BmiCalculator 
+
+
+
+
+
+2. Tips for using the Effect Hook
+2.1 Using Multiple useEffects to Separate Concerns
+
+Just like useState, you can also use multiple useEffects to separate unrelated logic into different effects based on what it is doing
+
+File: src/components/BmiCalculator/index.js
+
+
+...
+const BmiCalculator = () => {
+  ...
+  useEffect(() => {
+    document.title = `Your BMI: ${getBmi(weight, height)}`
+  })
+
+  useEffect(() => {
+    localStorage.setItem("weight", JSON.stringify(weight))
+  })
+
+  useEffect(() => {
+    localStorage.setItem("height", JSON.stringify(height))
+  })
+  ...
+}
+
+export default BmiCalculator
+
+
+
+2.2 Optimizing Performance by Skipping Effects
+
+In some cases, executing the effect after every render creates a performance problem, 
+It can be optimized by Skipping the effect when it is not required
+
+The useEffect
+ accepts another argument called Dependency Array, using which we can control the execution of effect
+
+Syntax:useEffect(effect, [var1, var2, ...])
+
+
+The values we pass to the dependency array are called dependencies, which can be state variables or props
+Effect will be executed whenever the dependencies are changed Without Dependencies
+
+The Effect executes after every render
+
+
+syntax:-useEffect(effect);
+
+Passing Empty Dependency Array
+
+The Effect executes only once after the first render 
+
+useEffect(effect, []);
+
+Passing Dependencies
+
+The Effect executes when dependencies are changed
+
+useEffect(effect, [var1, var2,...])
+
+
+File: src/components/BmiCalculator/index.js
+
+
+
+..
+const BmiCalculator = () => {
+  ...
+  useEffect(() => {
+     document.title = `Your BMI: ${getBmi(weight, height)}`
+  }, [height, weight])
+
+  useEffect(() => {
+    localStorage.setItem("height", JSON.stringify(height))
+  }, [height])
+
+  useEffect(() => {
+   localStorage.setItem("weight", JSON.stringify(weight))
+  }, [weight])
+  ...
+}
+
+export default BmiCalculator
+
